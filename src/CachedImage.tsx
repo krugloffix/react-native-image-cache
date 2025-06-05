@@ -13,11 +13,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated, { useSharedValue, withTiming } from 'react-native-reanimated';
 
 import CacheManager from './CacheManager';
 import { ImageProps, IProps } from './types';
@@ -67,18 +63,6 @@ const CachedImage = (props: IProps & typeof defaultProps) => {
   const animatedImage = useSharedValue(0);
   const animatedThumbnailImage = useSharedValue(0);
   const animatedLoadingImage = useSharedValue(1);
-
-  const imageSourceAnimatedStyle = useAnimatedStyle(() => {
-    return { opacity: animatedImage.value };
-  });
-
-  const thumbnailSourceAnimatedStyle = useAnimatedStyle(() => {
-    return { opacity: animatedThumbnailImage.value };
-  });
-
-  const loadingImageAnimatedStyle = useAnimatedStyle(() => {
-    return { opacity: animatedLoadingImage.value };
-  });
 
   useEffect(() => {
     if (isRemoteImage(propsSource)) {
@@ -212,9 +196,7 @@ const CachedImage = (props: IProps & typeof defaultProps) => {
     <View style={[styles.container, style]} testID={testID}>
       {!isImageReady &&
         (LoadingImageComponent ? (
-          <AnimatedView
-            style={[styles.loadingImageStyle, loadingImageAnimatedStyle]}
-          >
+          <AnimatedView style={[styles.loadingImageStyle]}>
             <LoadingImageComponent />
           </AnimatedView>
         ) : (
@@ -226,7 +208,7 @@ const CachedImage = (props: IProps & typeof defaultProps) => {
                 accessibilityRole={accessibilityRoleLoadingSource || 'image'}
                 accessible
                 resizeMode={resizeMode || 'contain'}
-                style={[loadingImageAnimatedStyle, loadingImageStyle]}
+                style={[loadingImageStyle]}
                 source={loadingSource}
               />
             )}
@@ -242,7 +224,7 @@ const CachedImage = (props: IProps & typeof defaultProps) => {
           onLoad={onThumbnailLoad}
           resizeMode={resizeMode || 'contain'}
           source={{ uri: thumbnailSource, ...propsOptions }}
-          style={[style, thumbnailSourceAnimatedStyle]}
+          style={[style]}
         />
       )}
       {imageSource && (
@@ -261,7 +243,7 @@ const CachedImage = (props: IProps & typeof defaultProps) => {
           // @ts-ignore
           source={imageSource}
           // @ts-ignore
-          style={[styles.imageStyle, imageSourceAnimatedStyle, imageStyle]}
+          style={[styles.imageStyle, imageStyle]}
         />
       )}
     </View>
